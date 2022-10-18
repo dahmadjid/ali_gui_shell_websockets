@@ -28,12 +28,12 @@ def testPost():
  
 async def sendMessage(message:str, ip:str, port:int) -> str:
     reader, writer = await asyncio.open_connection(ip, port)
-    print(f'Send: {message!r}')
+    print("Connected to Teamserver!, Sending Message: ", message)
     writer.write(message.encode())
     await writer.drain()
 
-    data = await reader.read(100)
-    print(f'Received: {data.decode()!r}')
+    data = await reader.read(255)
+    print(f'Received from Teamserver: {data.decode()!r}')
 
     print('Close the connection')
     writer.close()
@@ -45,7 +45,7 @@ async def sendingLoop():
     while True: 
         try:
             message_from_agent = tx_queue.get_nowait()
-            print("Recieved: ",message_from_agent)
+            print("Recieved from Agent: ",message_from_agent)
             await asyncio.create_task(sendMessage(message_from_agent, '127.0.0.1', 6205))
         except Empty:
             await asyncio.sleep(0.01)  # sleep for 10ms if the queue is empty.
