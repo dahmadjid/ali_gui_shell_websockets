@@ -31,11 +31,6 @@ async def sendMessage(message:str, ip:str, port:int) -> str:
     print("Connected to Teamserver!, Sending Message: ", message)
     writer.write(message.encode())
     await writer.drain()
-
-    data = await reader.read(255)
-    print(f'Received from Teamserver: {data.decode()!r}')
-
-    print('Close the connection')
     writer.close()
     await writer.wait_closed()
 
